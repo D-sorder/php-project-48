@@ -3,4 +3,3 @@
 
 [![CI Status](https://github.com/D-sorder/php-project-48/actions/workflows/ci.yml/badge.svg)](https://github.com/D-sorder/php-project-48/actions/workflows/ci.yml)
 [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=D-sorder_php-project-48&metric=coverage)](https://sonarcloud.io/summary/overall?id=D-sorder_php-project-48)
-[![SonarCloud Quality Gate](https://sonarcloud.io/api/project_badges/measure?D-sorder_php-project-48&metric=alert_status)](https://sonarcloud.io/summary/overall?id=D-sorder_php-project-48)
