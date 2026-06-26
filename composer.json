@@ -7,7 +7,9 @@
             "Hexlet\\Code\\": "src/"
         }
     },
-    "bin": ["gendiff"],
+    "bin": [
+        "gendiff"
+    ],
     "authors": [
         {
             "name": "D-sorder",
