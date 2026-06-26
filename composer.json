@@ -1,0 +1,20 @@
+{
+    "name": "hexlet/code",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Hexlet\\Code\\": "src/"
+        }
+    },
+    "bin": ["gendiff"],
+    "authors": [
+        {
+            "name": "D-sorder",
+            "email": "creepsta6001@gmail.com"
+        }
+    ],
+    "require": {
+        "docopt/docopt": "^1.0"
+    }
+}
