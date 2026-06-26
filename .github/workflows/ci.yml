@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, master ]  # добавьте нужные ветки
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
 
 jobs:
   build:
@@ -16,8 +16,9 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.5'
+          php-version: '8.3'
           tools: composer, phpcs, phpunit
+          coverage: xdebug   # включает Xdebug для покрытия
 
       - name: Install dependencies
         run: make install
@@ -30,11 +31,11 @@ jobs:
 
       - name: Send coverage to SonarCloud
         uses: SonarSource/sonarcloud-github-action@v2
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          with:
-            args: >
-              -Dsonar.organization=d-sorder
-              -Dsonar.projectKey=D-sorder_php-project-48
-              -Dsonar.php.coverage.reportPaths=build/logs/clover.xml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=d-sorder
+            -Dsonar.projectKey=D-sorder_php-project-48
+            -Dsonar.php.coverage.reportPaths=build/logs/clover.xml
