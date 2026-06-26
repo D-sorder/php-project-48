@@ -9,6 +9,8 @@ if (file_exists($autoloadPath1)) {
     require_once $autoloadPath2;
 }
 
+use function Hexlet\Code\genDiff;
+
 const VER = '1.0.0';
 
 $doc = <<<DOC
@@ -33,3 +35,9 @@ $args = Docopt::handle($doc, [
 
 foreach($args as $k=>$v)
     echo $k . ': ' . json_encode($v) . PHP_EOL;
+
+
+$firstFile = $args['<firstFile>'];
+$secondFile = $args['<secondFile>'];
+
+echo genDiff($firstFile, $secondFile);
