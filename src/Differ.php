@@ -40,8 +40,10 @@ function buildDiff(object $data1, object $data2): array
                 'type' => 'removed',
                 'oldValue' => $value1,
             ];
-        } elseif (is_object($value1) && is_object($value2) &&
-                  !empty(get_object_vars($value1)) && !empty(get_object_vars($value2))) {
+        } elseif (
+            is_object($value1) && is_object($value2) &&
+                  !empty(get_object_vars($value1)) && !empty(get_object_vars($value2))
+        ) {
             $result[] = [
                 'key' => $key,
                 'type' => 'nested',

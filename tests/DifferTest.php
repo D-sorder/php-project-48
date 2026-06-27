@@ -23,7 +23,7 @@ class DifferTest extends TestCase
     public function testGenDiffForYaml(): void
     {
         $fixturesPath = __DIR__ . '/fixtures';
-	$file1 = $fixturesPath . '/file1.yml';
+        $file1 = $fixturesPath . '/file1.yml';
         $file2 = $fixturesPath . '/file2.yml';
         $expected = file_get_contents($fixturesPath . '/expected_diff.txt');
 
