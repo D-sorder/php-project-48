@@ -1,6 +1,6 @@
 <?php
 
-namespace Hexlet\Code\Formatters;
+namespace Differ\Differ\Formatters;
 
 function json(array $diffTree): string
 {

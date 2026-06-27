@@ -1,6 +1,6 @@
 <?php
 
-namespace Hexlet\Code\Formatters;
+namespace Differ\Differ\Formatters;
 
 function stylish(array $diffTree, int $depth = 1): string
 {

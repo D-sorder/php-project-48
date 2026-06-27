@@ -1,10 +1,10 @@
 <?php
 
-namespace Hexlet\Code\Tests;
+namespace Differ\Differ\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-use function Hexlet\Code\genDiff;
+use function Differ\Differ\genDiff;
 
 class DifferTest extends TestCase
 {

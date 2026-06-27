@@ -1,9 +1,9 @@
 <?php
 
-namespace Hexlet\Code;
+namespace Differ\Differ;
 
 use function Funct\Collection\sortBy;
-use function Hexlet\Code\formatDiff;
+use function Differ\Differ\formatDiff;
 
 function genDiff(string $filePath1, string $filePath2, string $format = 'stylish'): string
 {
