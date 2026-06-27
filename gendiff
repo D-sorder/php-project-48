@@ -33,11 +33,9 @@ $args = Docopt::handle($doc, [
     'version' => VER
 ]);
 
-foreach($args as $k=>$v)
-    echo $k . ': ' . json_encode($v) . PHP_EOL;
-
-
 $firstFile = $args['<firstFile>'];
 $secondFile = $args['<secondFile>'];
 
-echo genDiff($firstFile, $secondFile);
+$format = $args['--format'] ?? 'stylish';
+
+echo genDiff($firstFile, $secondFile, $format);
