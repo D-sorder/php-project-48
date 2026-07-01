@@ -3,21 +3,17 @@
     "type": "library",
     "license": "MIT",
     "autoload": {
-        "psr-4": {
-            "Differ\\Differ\\": "src/"
-        },
         "files": [
             "src/Parser.php",
             "src/Differ.php",
+            "src/Formatters.php",
             "src/Formatters/Stylish.php",
             "src/Formatters/Plain.php",
-            "src/Formatters/Json.php",
-            "src/Formatters.php",
-            "tests/DifferTest.php"
+            "src/Formatters/Json.php"
         ]
     },
     "bin": [
-        "gendiff"
+        "bin/gendiff"
     ],
     "authors": [
         {

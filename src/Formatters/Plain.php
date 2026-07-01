@@ -1,43 +1,32 @@
 <?php
 
-namespace Differ\Differ\Formatters;
+namespace Differ\Formatters\Plain;
 
 function plain(array $diffTree, string $path = ''): string
 {
-    $lines = [];
-
-    foreach ($diffTree as $node) {
+    $lines = array_filter(array_map(function ($node) use ($path) {
         $key = $node['key'];
         $currentPath = $path ? "{$path}.{$key}" : $key;
 
-        switch ($node['type']) {
-            case 'nested':
-                $lines[] = plain($node['children'], $currentPath);
-                break;
-            case 'added':
-                $value = stringifyPlainValue($node['newValue']);
-                $lines[] = "Property '{$currentPath}' was added with value: {$value}";
-                break;
-            case 'removed':
-                $lines[] = "Property '{$currentPath}' was removed";
-                break;
-            case 'changed':
-                $oldValue = stringifyPlainValue($node['oldValue']);
-                $newValue = stringifyPlainValue($node['newValue']);
-                $lines[] = "Property '{$currentPath}' was updated. From {$oldValue} to {$newValue}";
-                break;
-            case 'unchanged':
-                // ничего не выводим
-                break;
-            default:
-                throw new \Exception("Unknown node type: {$node['type']}");
-        }
-    }
+        return match ($node['type']) {
+            'nested' => plain($node['children'], $currentPath),
+            'added' => "Property '{$currentPath}' was added with value: " . stringifyPlain($node['newValue']),
+            'removed' => "Property '{$currentPath}' was removed",
+            'changed' => sprintf(
+                "Property '%s' was updated. From %s to %s",
+                $currentPath,
+                stringifyPlain($node['oldValue']),
+                stringifyPlain($node['newValue'])
+            ),
+            'unchanged' => null,
+            default => throw new \Exception("Unknown node type: {$node['type']}")
+        };
+    }, $diffTree));
 
-    return implode("\n", array_filter($lines));
+    return implode("\n", $lines);
 }
 
-function stringifyPlainValue($value): string
+function stringifyPlain($value): string
 {
     if (is_null($value)) {
         return 'null';

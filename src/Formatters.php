@@ -1,21 +1,17 @@
 <?php
 
-namespace Differ\Differ;
+namespace Differ\Formatters;
 
-use function Differ\Differ\Formatters\stylish;
-use function Differ\Differ\Formatters\plain;
-use function Differ\Differ\Formatters\json as jsonFormat;
+use function Differ\Formatters\Stylish\stylish;
+use function Differ\Formatters\Plain\plain;
+use function Differ\Formatters\Json\jsonFormat;
 
 function formatDiff(array $diffTree, string $format): string
 {
-    switch ($format) {
-        case 'stylish':
-            return "{\n" . stylish($diffTree) . "\n}";
-        case 'plain':
-            return plain($diffTree);
-        case 'json':
-            return jsonFormat($diffTree);
-        default:
-            throw new \Exception("Unsupported format: {$format}");
-    }
+    return match ($format) {
+        'stylish' => "{\n" . stylish($diffTree) . "\n}\n",
+        'plain'   => plain($diffTree) . "\n",
+        'json'    => jsonFormat($diffTree),
+        default   => throw new \Exception("Unsupported format: {$format}")
+    };
 }

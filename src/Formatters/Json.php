@@ -1,14 +1,14 @@
 <?php
 
-namespace Differ\Differ\Formatters;
+namespace Differ\Formatters\Json;
 
-function json(array $diffTree): string
+function jsonFormat(array $diffTree): string
 {
-    $data = formatNode($diffTree);
-    return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    $normalized = normalizeTree($diffTree);
+    return json_encode($normalized, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
 }
 
-function formatNode(array $nodes): array
+function normalizeTree(array $nodes): array
 {
     $result = [];
     foreach ($nodes as $node) {
@@ -16,28 +16,15 @@ function formatNode(array $nodes): array
             'key' => $node['key'],
             'type' => $node['type'],
         ];
-
-        switch ($node['type']) {
-            case 'nested':
-                $item['children'] = formatNode($node['children']);
-                break;
-            case 'added':
-                $item['newValue'] = normalizeValue($node['newValue']);
-                break;
-            case 'removed':
-                $item['oldValue'] = normalizeValue($node['oldValue']);
-                break;
-            case 'changed':
-                $item['oldValue'] = normalizeValue($node['oldValue']);
-                $item['newValue'] = normalizeValue($node['newValue']);
-                break;
-            case 'unchanged':
-                $item['oldValue'] = normalizeValue($node['oldValue']);
-                break;
-            default:
-                throw new \Exception("Unknown node type: {$node['type']}");
+        if (array_key_exists('children', $node)) {
+            $item['children'] = normalizeTree($node['children']);
         }
-
+        if (array_key_exists('oldValue', $node)) {
+            $item['oldValue'] = normalizeValue($node['oldValue']);
+        }
+        if (array_key_exists('newValue', $node)) {
+            $item['newValue'] = normalizeValue($node['newValue']);
+        }
         $result[] = $item;
     }
     return $result;
@@ -45,10 +32,7 @@ function formatNode(array $nodes): array
 
 function normalizeValue($value)
 {
-    if (is_object($value)) {
-        return '[complex value]';
-    }
-    if (is_array($value)) {
+    if (is_object($value) || is_array($value)) {
         return '[complex value]';
     }
     return $value;

@@ -1,48 +1,35 @@
 <?php
 
-namespace Differ\Differ\Formatters;
+namespace Differ\Formatters\Stylish;
 
 function stylish(array $diffTree, int $depth = 1): string
 {
-    $lines = [];
-    $indent = str_repeat(' ', $depth * 4);
-    $indentWithSign = str_repeat(' ', $depth * 4 - 2);
-
-    foreach ($diffTree as $node) {
+    $lines = array_map(function ($node) use ($depth) {
+        $indent = str_repeat(' ', $depth * 4);
+        $indentWithSign = str_repeat(' ', $depth * 4 - 2);
         $key = $node['key'];
-        switch ($node['type']) {
-            case 'nested':
-                $children = stylish($node['children'], $depth + 1);
-                $lines[] = "{$indent}{$key}: {";
-                $lines[] = $children;
-                $lines[] = "{$indent}}";
-                break;
-            case 'added':
-                $value = stringifyValue($node['newValue'], $depth + 1);
-                $lines[] = "{$indentWithSign}+ {$key}: {$value}";
-                break;
-            case 'removed':
-                $value = stringifyValue($node['oldValue'], $depth + 1);
-                $lines[] = "{$indentWithSign}- {$key}: {$value}";
-                break;
-            case 'changed':
-                $oldValue = stringifyValue($node['oldValue'], $depth + 1);
-                $newValue = stringifyValue($node['newValue'], $depth + 1);
-                $lines[] = "{$indentWithSign}- {$key}: {$oldValue}";
-                $lines[] = "{$indentWithSign}+ {$key}: {$newValue}";
-                break;
-            case 'unchanged':
-                $value = stringifyValue($node['oldValue'], $depth + 1);
-                $lines[] = "{$indent}{$key}: {$value}";
-                break;
-            default:
-                throw new \Exception("Unknown node type: {$node['type']}");
-        }
-    }
+
+        return match ($node['type']) {
+            'nested' => implode("\n", [
+                "{$indent}{$key}: {",
+                stylish($node['children'], $depth + 1),
+                "{$indent}}"
+            ]),
+            'added' => "{$indentWithSign}+ {$key}: " . stringify($node['newValue'], $depth + 1),
+            'removed' => "{$indentWithSign}- {$key}: " . stringify($node['oldValue'], $depth + 1),
+            'changed' => implode("\n", [
+                "{$indentWithSign}- {$key}: " . stringify($node['oldValue'], $depth + 1),
+                "{$indentWithSign}+ {$key}: " . stringify($node['newValue'], $depth + 1)
+            ]),
+            'unchanged' => "{$indent}{$key}: " . stringify($node['oldValue'], $depth + 1),
+            default => throw new \Exception("Unknown node type: {$node['type']}")
+        };
+    }, $diffTree);
+
     return implode("\n", $lines);
 }
 
-function stringifyValue($value, int $depth): string
+function stringify($value, int $depth): string
 {
     if (is_null($value)) {
         return 'null';
@@ -58,12 +45,9 @@ function stringifyValue($value, int $depth): string
         if (empty($vars)) {
             return '{}';
         }
-        $lines = [];
-        $indent = str_repeat(' ', $depth * 4);
-        $lines[] = '{';
+        $lines = ['{'];
         foreach ($vars as $k => $v) {
-            $val = stringifyValue($v, $depth + 1);
-            $lines[] = "{$indent}{$k}: {$val}";
+            $lines[] = str_repeat(' ', $depth * 4) . "{$k}: " . stringify($v, $depth + 1);
         }
         $lines[] = str_repeat(' ', ($depth - 1) * 4) . '}';
         return implode("\n", $lines);

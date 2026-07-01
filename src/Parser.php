@@ -1,22 +1,15 @@
 <?php
 
-namespace Differ\Differ;
+namespace Differ\Parsers;
 
 use Symfony\Component\Yaml\Yaml;
 
-function parseFile(string $filePath): object
+function parse(string $content, string $extension): object
 {
-    $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-
-    $content = file_get_contents($filePath);
-    if ($content === false) {
-        throw new \Exception("Could not read file: $filePath");
-    }
-
     return match ($extension) {
         'json' => parseJson($content),
         'yml', 'yaml' => parseYaml($content),
-        default => throw new \Exception("Unsupported file format: $extension"),
+        default => throw new \Exception("Unsupported file format: {$extension}")
     };
 }
 
